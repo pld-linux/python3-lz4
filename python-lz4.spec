@@ -18,15 +18,19 @@ BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 %if %{with python2}
 BuildRequires:	python-devel
+BuildRequires:	python-pkgconfig
 %if %{with tests}
 BuildRequires:	python-future
+BuildRequires:	python-psutil
 BuildRequires:	python-pytest-cov
 %endif
 %endif
 %if %{with python3}
 BuildRequires:	python3-devel
+BuildRequires:	python3-pkgconfig
 %if %{with tests}
 BuildRequires:	python3-future
+BuildRequires:	python3-psutil
 BuildRequires:	python3-pytest-cov
 %endif
 %endif
