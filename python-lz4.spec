@@ -8,7 +8,7 @@
 Summary:	LZ4 bindings for Python
 Name:		python-%{module}
 Version:	2.1.6
-Release:	3
+Release:	4
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://pypi.debian.net/lz4/lz4-%{version}.tar.gz
