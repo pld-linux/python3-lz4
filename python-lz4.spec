@@ -1,18 +1,21 @@
+#
+# TODO: versions 3.0.0+ support only python 3.6+
+#
 # Conditional build:
 %bcond_with	doc	# don't build doc
 %bcond_without	tests	# do not perform "make test"
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
-%define 	module	lz4
+%define		module	lz4
 Summary:	LZ4 bindings for Python
 Name:		python-%{module}
-Version:	2.1.6
-Release:	4
+Version:	2.2.1
+Release:	1
 License:	BSD
 Group:		Libraries/Python
 Source0:	http://pypi.debian.net/lz4/lz4-%{version}.tar.gz
-# Source0-md5:	badde942dabaac89256243b87977c49c
+# Source0-md5:	778661bc5271b5befe11ee127c252a5d
 URL:		https://github.com/python-lz4/python-lz4
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
