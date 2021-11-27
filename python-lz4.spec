@@ -26,6 +26,7 @@ BuildRequires:	python-pkgconfig
 BuildRequires:	python-future
 BuildRequires:	python-psutil
 BuildRequires:	python-pytest-cov
+BuildRequires:	python-pytest-runner
 %endif
 %endif
 %if %{with python3}
@@ -35,6 +36,7 @@ BuildRequires:	python3-pkgconfig
 BuildRequires:	python3-future
 BuildRequires:	python3-psutil
 BuildRequires:	python3-pytest-cov
+BuildRequires:	python3-pytest-runner
 %endif
 %endif
 BuildRequires:	lz4-devel >= 1.7.5
