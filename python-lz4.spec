@@ -2,45 +2,60 @@
 # TODO: versions 3.0.0+ support only python 3.6+
 #
 # Conditional build:
-%bcond_with	doc	# don't build doc
-%bcond_without	tests	# do not perform "make test"
+%bcond_without	doc	# Sphinx documentation
+%bcond_without	tests	# unit tests
 %bcond_without	python2 # CPython 2.x module
 %bcond_without	python3 # CPython 3.x module
 
 %define		module	lz4
 Summary:	LZ4 bindings for Python
+Summary(pl.UTF-8):	Wiązania LZ4 dla Pythona
 Name:		python-%{module}
+# keep 2.x here for python2 support
 Version:	2.2.1
 Release:	2
 License:	BSD
 Group:		Libraries/Python
-Source0:	http://pypi.debian.net/lz4/lz4-%{version}.tar.gz
+#Source0Download: https://pypi.org/simple/lz4/
+Source0:	https://files.pythonhosted.org/packages/source/l/lz4/lz4-%{version}.tar.gz
 # Source0-md5:	778661bc5271b5befe11ee127c252a5d
 URL:		https://github.com/python-lz4/python-lz4
-BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	lz4-devel >= 1:1.7.5
+BuildRequires:	py3c >= 1.0
 %if %{with python2}
-BuildRequires:	python-devel
+BuildRequires:	python-devel >= 1:2.7
 BuildRequires:	python-pkgconfig
+BuildRequires:	python-setuptools
+BuildRequires:	python-setuptools_scm
 %if %{with tests}
 BuildRequires:	python-future
 BuildRequires:	python-psutil
+BuildRequires:	python-pytest >= 3.3.1
 BuildRequires:	python-pytest-cov
 BuildRequires:	python-pytest-runner
 %endif
 %endif
 %if %{with python3}
-BuildRequires:	python3-devel
+BuildRequires:	python3-devel >= 1:3.4
 BuildRequires:	python3-pkgconfig
+BuildRequires:	python3-setuptools
+BuildRequires:	python3-setuptools_scm
 %if %{with tests}
-BuildRequires:	python3-future
 BuildRequires:	python3-psutil
+BuildRequires:	python3-pytest >= 3.3.1
 BuildRequires:	python3-pytest-cov
 BuildRequires:	python3-pytest-runner
 %endif
 %endif
-BuildRequires:	lz4-devel >= 1.7.5
-Requires:	python-modules
+BuildRequires:	rpm-build >= 4.6
+BuildRequires:	rpm-pythonprov
+BuildRequires:	rpmbuild(macros) >= 1.714
+%if %{with doc}
+BuildRequires:	python-sphinx_bootstrap_theme
+BuildRequires:	sphinx-pdg-2 >= 1.6.0
+%endif
+Requires:	lz4-libs >= 1:1.7.5
+Requires:	python-modules >= 1:2.7
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -48,22 +63,25 @@ This package provides python bindings for the LZ4 compression library.
 
 %package -n python3-%{module}
 Summary:	LZ4 bindings for Python
+Summary(pl.UTF-8):	Wiązania LZ4 dla Pythona
 Group:		Libraries/Python
-Requires:	python3-modules
+Requires:	lz4-libs >= 1:1.7.5
+Requires:	python3-modules >= 1:3.4
 
 %description -n python3-%{module}
 This package provides python bindings for the LZ4 compression library.
 
 %package apidocs
-Summary:	%{module} API documentation
-Summary(pl.UTF-8):	Dokumentacja API %{module}
+Summary:	API documentation for Python %{module} module
+Summary(pl.UTF-8):	Dokumentacja API modułu Pythona %{module}
 Group:		Documentation
+BuildArch:	noarch
 
 %description apidocs
-API documentation for %{module}.
+API documentation for Python %{module} module.
 
 %description apidocs -l pl.UTF-8
-Dokumentacja API %{module}.
+Dokumentacja API modułu Pythona %{module}.
 
 %prep
 %setup -q -n %{module}-%{version}
@@ -78,15 +96,17 @@ Dokumentacja API %{module}.
 %endif
 
 %if %{with doc}
-cd docs
-%{__make} -j1 html
-rm -rf _build/html/_sources
+PYTHONPATH=$(pwd)/$(echo build-2/lib.*):$(pwd) \
+%{__make} -C docs html \
+	SPHINXBUILD=sphinx-build-2
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
+
 %if %{with python2}
 %py_install
+
 %py_postclean
 %endif
 
@@ -100,7 +120,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python2}
 %files
 %defattr(644,root,root,755)
-%doc README.rst
+%doc LICENSE README.rst
 %dir %{py_sitedir}/%{module}
 %{py_sitedir}/%{module}/*.py[co]
 %dir %{py_sitedir}/%{module}/block
@@ -116,7 +136,7 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with python3}
 %files -n python3-%{module}
 %defattr(644,root,root,755)
-%doc README.rst
+%doc LICENSE README.rst
 %dir %{py3_sitedir}/%{module}
 %{py3_sitedir}/%{module}/*.py
 %dir %{py3_sitedir}/%{module}/block
@@ -135,5 +155,5 @@ rm -rf $RPM_BUILD_ROOT
 %if %{with doc}
 %files apidocs
 %defattr(644,root,root,755)
-%doc docs/_build/html/*
+%doc docs/_build/html/{_static,*.html,*.js}
 %endif
