@@ -8,7 +8,7 @@ Summary:	LZ4 bindings for Python
 Summary(pl.UTF-8):	Wiązania LZ4 dla Pythona
 Name:		python3-%{module}
 Version:	3.1.10
-Release:	1
+Release:	2
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://pypi.org/simple/lz4/
